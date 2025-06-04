@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة الإدارة العليا</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background-color: #f1f5f4;
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #2f5d62;
+      color: white;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar select, .sidebar button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .sidebar button {
+      background-color: #ffc107;
+      cursor: pointer;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .header .top-directorate {
+      font-size: 22px;
+      color: #2f5d62;
+      font-weight: bold;
+    }
+
+    .search-box {
+      background-color: white;
+      border-radius: 25px;
+      padding: 8px 15px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      font-size: 16px;
+      margin-left: 10px;
+      background: none;
+    }
+
+    .section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .section h3 {
+      margin-top: 0;
+      color: #2f5d62;
+    }
+
+    .data-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background-color: #e8f5e9;
+      border: 1px solid #c8e6c9;
+      border-radius: 10px;
+      padding: 15px;
+ min-width:100px;
+      flex: 1 1 100px;
+    }
+
+    .card h4 {
+      margin: 0 0 10px;
+      color: #2e7d32;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .employee-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .employee-table th, .employee-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .employee-table th {
+      background-color: #dcedc8;
+    }
+
+    canvas {
+      width: 100% !important;
+      max-width: 100%;
+    }
+
+    #popup {
+      display: none;
+      position: fixed;
+      top: 20%;
+      right: 25%;
+      width: 50%;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    #popup button {
+      margin-top: 15px;
+      padding: 8px 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>اختيار المديرية</h2>
+    <select>
+      <option>الاحصاء والنظم الالكترونية</option>
+      <option>المشتريات الحكومية</option>
+      <option>المحتوى المحلي</option>
+    </select>
+
+    <h2>اختيار الموظف</h2>
+    <select>
+      <option>غالية  </option>
+      <option>أحلام </option>
+<option>حمد</option>
+<option>فاطمة </option>
+    </select>
+
+    <button>عرض التفاصيل</button>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <div class="top-directorate"><i class="fas fa-trophy"></i> المديرية الأفضل إنجازاً: الإحصاء والنظم الالكترونية</div>
+      <div class="search-box">
+        <input type="text" placeholder="ابحث عن موظف أو مديرية...">
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>مؤشرات إنجاز المديرية</h3>
+      <div class="data-grid">
+        <div class="card"><h4><i class="fas fa-briefcase"></i> المشاريع</h4><p>5 مشاريع</p></div>
+        <div class="card"><h4><i class="fas fa-lightbulb"></i> الابتكارات</h4><p>3 ابتكارات</p></div>
+        <div class="card"><h4><i class="fas fa-bullseye"></i> المبادرات</h4><p>4 مبادرات</p></div>
+        <div class="card"><h4><i class="fas fa-tasks"></i> المهام التشغيلية</h4><p>20 مهمة</p></div>
+        <div class="card"><h4><i class="fas fa-chart-line"></i> مؤشر الأداء</h4><p>92%</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>إنجازات المديريات (من الأعلى إلى الأدنى)</h3>
+      <canvas id="directorateChart" height="200"></canvas>
+    </div>
+
+    <div class="section">
+      <h3>نسب الإنجاز حسب النوع وعدد الموظفين</h3>
+      <div class="data-grid">
+        <div class="card">
+          <h4><i class="fas fa-chart-pie"></i> نسب الإنجاز</h4>
+          <canvas id="pieChart" width="250" height="250"></canvas>
+        </div>
+
+        <div class="card">
+          <h4><i class="fas fa-users"></i> عدد الموظفين</h4>
+          <p>الإجمالي: <strong>150</strong> موظف</p>
+          <canvas id="genderChart" width="250" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>تفاصيل الموظفين</h3>
+      <table class="employee-table">
+        <tr>
+          <th>اسم الموظف</th>
+          <th>الدائرة</th>
+          <th>المشاريع</th>
+          <th>المهام</th>
+          <th>الابتكارات</th>
+          <th>المبادرات</th>
+          <th>أداء</th>
+          <th>تفاصيل</th>
+        </tr>
+        <tr>
+          <td>أحلام</td>
+          <td>تقنية المعلومات</td>
+          <td>2</td>
+          <td>10</td>
+          <td>1</td>
+          <td>2</td>
+          <td>95%</td>
+          <td><button onclick="showDetails('أحلام')">عرض</button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- نافذة منبثقة -->
+  <div id="popup">
+    <h3>تفاصيل الموظف: <span id="employeeName"></span></h3>
+    <p>المشاريع: 2</p>
+    <p>المهام: 10</p>
+    <p>الابتكارات: 1</p>
+    <p>المبادرات: 2</p>
+    <button onclick="document.getElementById('popup').style.display='none'">إغلاق</button>
+  </div>
+
+  <script>
+    // الرسم البياني الشريطي للمديريات
+    const barCtx = document.getElementById('directorateChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['الاحصاء والنظم الالكترونية', 'المشتريات', 'المحتوى المحلي', 'مكتب الامين العام', 'الشؤون الادارية والمالية', 'المناقصات', 'مكتب متابعة المشاريع'],
+        datasets: [{
+          label: 'نسبة الإنجاز',
+          data: [92, 88, 80, 75, 70, 65, 60],
+          backgroundColor: 'rgba(46, 125, 50, 0.6)',
+          borderColor: 'rgba(46, 125, 50, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        scales: {
+          x: {
+            max: 100,
+            title: {
+              display: true,
+              text: 'نسبة الإنجاز'
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+
+    // الرسم البياني الدائري لنسب الإنجاز
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['مشاريع', 'ابتكارات', 'مبادرات', 'مهام'],
+        datasets: [{
+          label: 'نسب الإنجاز',
+          data: [25, 10, 15, 50],
+          backgroundColor: [
+            'rgba(33, 150, 243, 0.7)',
+            'rgba(255, 193, 7, 0.7)',
+            'rgba(76, 175, 80, 0.7)',
+            'rgba(244, 67, 54, 0.7)'
+          ],
+          borderColor: ['#2196F3', '#FFC107', '#4CAF50', '#F44336'],
+          borderWidth: 1
+        }]
+      }
+    });
+
+    // الرسم البياني لنسبة الذكور والإناث
+    const genderCtx = document.getElementById('genderChart').getContext('2d');
+    new Chart(genderCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['ذكور', 'إناث'],
+        datasets: [{
+          data: [90, 60], // مثال: 90 ذكور و60 إناث
+          backgroundColor: ['#42A5F5', '#F06292'],
+          borderColor: ['#1E88E5', '#EC407A'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: {
+                family: 'Cairo'
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // نافذة تفاصيل الموظف
+    function showDetails(name) {
+      document.getElementById('employeeName').textContent = name;
+      document.getElementById('popup').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

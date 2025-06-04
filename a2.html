@@ -1,0 +1,538 @@
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة إدارة المشروع</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            display: flex;
+            height: 100vh;
+            color: #333;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color:#2f5d62; /* Dark blue, similar to the image */
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar .company-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar .company-logo h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #e3f2fd;
+        }
+
+        .sidebar .user-profile {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .sidebar .user-profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #e3f2fd;
+            margin-bottom: 10px;
+        }
+
+        .sidebar .user-profile h3 {
+            margin: 5px 0;
+            font-size: 20px;
+            color: #e3f2fd;
+        }
+
+        .sidebar .user-profile .stars span {
+            color: #ffc107; /* Gold for stars */
+            font-size: 20px;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            flex-grow: 1; /* Pushes the "out" button to the bottom */
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar nav ul li a:hover,
+        .sidebar nav ul li.active a {
+            background-color: #1565c0; /* Slightly lighter blue on hover/active */
+        }
+
+        .sidebar nav ul li a i {
+            margin-left: 10px; /* Space between icon and text */
+            font-size: 20px;
+        }
+
+        .sidebar .logout-button {
+            margin-top: auto; /* Pushes it to the bottom */
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .sidebar .logout-button a {
+            background-color: #e57373; /* Reddish color for logout */
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .logout-button a:hover {
+            background-color: #ef5350;
+        }
+
+        .sidebar .logout-button a i {
+            margin-left: 8px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #0d47a1;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 25px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 5px;
+            font-size: 16px;
+            margin-left: 10px;
+            text-align: right; /* For RTL */
+        }
+
+        .search-box i {
+            color: #ccc;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            padding: 25px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #0d47a1;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h2 i {
+            margin-left: 10px;
+            color: #42a5f5; /* Light blue icon */
+        }
+
+        /* Project Timeline Section */
+        .project-timeline .timeline-header {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .project-timeline .timeline-step {
+            background-color: #bbdefb; /* Light blue background */
+            border-radius: 8px;
+            padding: 15px 20px;
+            text-align: center;
+            width: 12%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .project-timeline .timeline-step.completed {
+            background-color: #a5d6a7; /* Green for completed steps */
+        }
+
+        .project-timeline .timeline-step.current {
+            background-color: #ffcc80; /* Orange for current step */
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+
+        .project-timeline .timeline-step h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            color: #0d47a1;
+        }
+
+        .project-timeline .timeline-step p {
+            margin: 0;
+            font-size: 14px;
+            color: #424242;
+        }
+
+        .project-timeline .details-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .project-timeline .detail-item {
+            text-align: center;
+            width: 12%;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Simple Report Section */
+        .simple-report .report-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .simple-report .report-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .simple-report .report-item h3 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #1976d2;
+        }
+
+        .simple-report .report-item p {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Project Progress Graph */
+        .project-progress-graph {
+            text-align: center;
+        }
+
+        .project-progress-graph canvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        /* Project Setback Section */
+        .project-setback .setback-item {
+            background-color: #ffe0b2; /* Light orange for setbacks */
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-right: 5px solid #fb8c00; /* Darker orange border */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .project-setback .setback-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-setback .setback-item h3 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #d84315; /* Reddish orange for setback title */
+            display: flex;
+            align-items: center;
+        }
+        .project-setback .setback-item h3 i {
+            margin-left: 8px;
+            color: #ef6c00;
+        }
+
+        .project-setback .setback-item p {
+            margin: 0 0 5px 0;
+            font-size: 15px;
+            color: #6d4c41; /* Brownish color for text */
+        }
+        .project-setback .setback-item strong {
+            color: #c2185b; /* Dark pink for emphasis */
+        }
+
+        /* Font Awesome for icons */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+    </style>
+</head>
+<body>
+   <!-- داخل الـ body -->
+<body>
+    <div class="sidebar">
+        <div class="company-logo">
+            <img src="logo.png" alt="Logo" style="width: 200px; margin-bottom: 10px;">
+            <h3>اسم الموظف</h3>
+            <p>abc@example.com</p>
+        </div>
+
+        <h2 style="font-size: 18px; color: #e3f2fd; text-align: center; margin-bottom: 20px;">صفحة الموظف</h2>
+
+        <!-- قائمة التنقل داخل الشريط الجانبي -->
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i>الرئيسية</a></li>
+                <li><a href="t.html"><i class="fas fa-tasks"></i>المهام</a></li>
+                <li><a href="a2.html"><i class="fas fa-lightbulb"></i>المشاريع</a></li>
+                <li><a href="#"><i class="fas fa-project-diagram"></i>المبادرات</a></li>
+                <li><a href="#"><i class="fas fa-chalkboard-teacher"></i>ورش تدريبية</a></li>
+            </ul>
+        </nav>
+
+        <div class="logout-button">
+            <a href="index.html"><i class="fas fa-sign-out-alt"></i>خروج</a>
+        </div>
+    </div>
+
+
+    <div class="main-content">
+        <div class="header">
+            <h1>لوحة إدارة المشروع</h1>
+            <div class="search-box">
+                <input type="text" placeholder="ابحث هنا...">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+
+        <div class="card project-timeline">
+           <h2 style="display: flex; align-items: center; gap: 25px;">
+  <i class="fas fa-calendar-alt" style="margin-left: 10px;"></i>الخطة الزمنية لمشروع الموقع الداخلي
+
+  <span style="display: flex; align-items: center; gap: 10px; font-size: 14px;">
+    <span style="background-color: green; width: 15px; height: 15px; border-radius: 50%; display: inline-block;"></span> مكتمل
+    <span style="background-color: gold; width: 15px; height: 15px; border-radius: 50%; display: inline-block;"></span> قيد التنفيذ
+    <span style="background-color: red; width: 15px; height: 15px; border-radius: 50%; display: inline-block;"></span> متأخر
+  </span>
+</h2>
+
+            <div class="timeline-header">
+                <div class="timeline-step completed">
+                    <h3>المرحلة 1</h3>
+                    <p>التخطيط</p>
+               <p style="color: #2f5d62;  font-weight: bold;">10-10-2024  الى 25-3-2025 </p>
+                </div>
+                <div class="timeline-step completed">
+                    <h3>المرحلة 2</h3>
+                    <p>التحليل</p>
+ <p style="color: #2f5d62;  font-weight: bold;">10-10-2024  الى 25-3-2025 </p>
+                </div>
+                <div class="timeline-step completed">
+                    <h3>المرحلة 3</h3>
+                    <p>التصميم</p>
+ <p style="color: #2f5d62;  font-weight: bold;">10-10-2024  الى 25-3-2025 </p>
+                </div>
+                <div class="timeline-step current">
+                    <h3>المرحلة 4</h3>
+                    <p>التطوير</p>
+ <p style="color: #2f5d62;  font-weight: bold;">10-10-2024  الى 25-3-2025 </p>
+                </div>
+                <div class="timeline-step">
+                    <h3>المرحلة 5</h3>
+                    <p>الاختبار</p>
+ <p style="color: #2f5d62;  font-weight: bold;">10-10-2024  الى 25-3-2025 </p>
+                </div>
+                <div class="timeline-step">
+                    <h3>المرحلة 6</h3>
+                    <p>النشر</p>
+ <p style="color: #2f5d62;  font-weight: bold;">10-10-2024  الى 25-3-2025 </p>
+                </div>
+                <div class="timeline-step">
+                    <h3>المرحلة 7</h3>
+                    <p>المتابعة</p>
+ <p style="color: #2f5d62;  font-weight: bold;">10-10-2024  الى 25-3-2025 </p>
+                </div>
+            </div>
+            <div class="details-row">
+                <div class="detail-item"><strong>تاريخ البدء:</strong> 01/05/2024</div>
+                <div class="detail-item"><strong>تاريخ الانتهاء:</strong> 10/05/2024</div>
+                <div class="detail-item"><strong>الحالة:</strong> متعثر</div>
+                <div class="detail-item"><strong>التقدم:</strong> 25%</div>
+                <div class="detail-item"><strong>المسؤول:</strong> أحلام</div>
+                <div class="detail-item"><strong>الميزانية:</strong> 17000 OMR</div>
+                <div class="detail-item"><strong>ملاحظات:</strong> جارئ العمل على معالجة الخطة</div>
+            </div>
+        </div>
+
+        <div class="card simple-report">
+            <h2><i class="fas fa-clipboard-list"></i>تقرير بسيط عن التقدم</h2>
+            <div class="report-item">
+                <h3>تقرير المرحلة الثالثة: التطوير</h3>
+                <p>تم الانتهاء من <strong>70%</strong> من تصاميم واجهة المستخدم وتجربة المستخدم. تم الموافقة على التصاميم الأولية من فريق الاعلام وجاري العمل على تطوير وتنفيذ الموقع . تم عقد اجتماعين مع فريق العمل  لمراجعة التقدم وتحديد العقبات.</p>
+            </div>
+            <div class="report-item">
+                <h3>تحديثات جديدة لتسريع سير العمل</h3>
+                <p>تم تخصيص مصمم إضافي للمشروع لتسريع وتيرة العمل في المرحلة الحالية. .</p>
+            </div>
+        </div>
+
+        <div class="card project-progress-graph">
+            <h2><i class="fas fa-chart-area"></i>الرسم البياني لتقدم المشروع</h2>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="projectProgressChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card project-setback">
+            <h2><i class="fas fa-exclamation-triangle"></i>تحديات المشروع</h2>
+            <div class="setback-item">
+                <h3><i class="fas fa-bug"></i>تأخير في تسليم المشروع</h3>
+                <p><strong>السبب:</strong> تأخر تطوير وتنفيذ الموقع الداخلي . هذا أثر على الجدول الزمني المتوقع للمرحلة الخامسة.</p>
+                <p><strong>خطة المعالجة:</strong> تم التواصل مع الشركة المنفذة للمشروع وتحديد موعد جديد لتسليم المشروع . تم وضع خطة بديلة للعمل على مهام أخرى  في الوقت الحالي لتقليل التأثير.</p>
+            </div>
+           
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Get the canvas element for the chart
+        const ctx = document.getElementById('projectProgressChart').getContext('2d');
+
+        // Create the chart instance
+        const projectProgressChart = new Chart(ctx, {
+            type: 'line', // Can be 'bar', 'pie', 'doughnut', etc.
+            data: {
+                labels: ['الأسبوع 1', 'الأسبوع 2', 'الأسبوع 3', 'الأسبوع 4', 'الأسبوع 5', 'الأسبوع 6', 'الأسبوع 7', 'الأسبوع 8'],
+                datasets: [{
+                    label: 'نسبة التقدم المئوية',
+                    data: [10, 25, 45, 60, 75, 85, 90, 95], // Example progress data
+                    backgroundColor: 'rgba(66, 165, 245, 0.4)', // Light blue with transparency
+                    borderColor: 'rgba(66, 165, 245, 1)',   // Solid blue
+                    borderWidth: 3,
+                    fill: true, // Fills the area under the line
+                    tension: 0.4 // Makes the line curved
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Allows flexible height/width
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: 'Cairo', // Apply Arabic font to legend
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        rtl: true, // Enable RTL for tooltips
+                        titleFont: {
+                            family: 'Cairo'
+                        },
+                        bodyFont: {
+                            family: 'Cairo'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100, // Max percentage is 100
+                        title: {
+                            display: true,
+                            text: 'نسبة التقدم (%)',
+                            font: {
+                                family: 'Cairo', // Apply Arabic font to Y-axis title
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%'; // Add '%' to Y-axis labels
+                            },
+                            font: {
+                                family: 'Cairo' // Apply Arabic font to Y-axis ticks
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'الأسابيع',
+                            font: {
+                                family: 'Cairo', // Apply Arabic font to X-axis title
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Cairo' // Apply Arabic font to X-axis ticks
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

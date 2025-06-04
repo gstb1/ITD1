@@ -1,0 +1,615 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة الأداء المؤسسي الشامل</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Visualization & Content Choices:
+        - Report Info: Challenges (Slide 2) -> Goal: Inform -> Viz: Text + Icons (HTML/CSS) -> Interaction: Static -> Justification: Clear problem statement.
+        - Report Info: System Overview (Slide 3) -> Goal: Organize -> Viz: Conceptual Flow Diagram (HTML/CSS/Tailwind) -> Interaction: Static -> Justification: Visualizes system components.
+        - Report Info: Plan Alignment (Slide 4) -> Goal: Inform/Compare -> Viz: Text, Progress Bar Chart (Chart.js) -> Interaction: Hover on chart -> Justification: Shows plan tracking.
+        - Report Info: Task/Project Mgt (Slide 5) -> Goal: Inform/Compare -> Viz: Text, Donut Chart for task status, HTML progress bars for projects (Chart.js, HTML/CSS) -> Interaction: Hover on chart -> Justification: Illustrates task and project oversight.
+        - Report Info: Innovation (Slide 6) -> Goal: Inform/Organize -> Viz: Text, Innovation Flow Diagram (HTML/CSS), Bar chart for ideas (Chart.js) -> Interaction: Static diagram, hover on chart -> Justification: Explains innovation platform.
+        - Report Info: User Dashboards (Slides 7-9) -> Goal: Inform/Illustrate -> Viz: Mock dashboard layouts with static text and example mini-charts (HTML/CSS, Chart.js) -> Interaction: Static display -> Justification: Showcases user-specific views.
+        - Report Info: KPIs/Impact (Slide 11) -> Goal: Compare/Persuade -> Viz: "Before & After" Bar Charts (Chart.js) -> Interaction: Hover on charts -> Justification: Highlights system benefits.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #E5EFEA /* Beige Background */
+           
+        }
+        .tajawal-bold { font-weight: 700; }
+        .tajawal-medium { font-weight: 500; }
+        .tajawal-regular { font-weight: 400; }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s, color 0.3s;
+            color: #795548; /* Soft Brown Text */
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #4DB6AC; /* Muted Teal Accents */
+            color: white;
+        }
+        .section-title {
+            color: #3E2723; /* Darkest Brown for titles */
+            border-bottom: 2px solid #4DB6AC; /* Muted Teal Accent */
+            padding-bottom: 0.5rem;
+        }
+        .card {
+            background-color: #F6ECE2; /* Lighter Beige for cards */
+            border: 1px solid #D7CCC8; /* Light Brown border */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .btn-primary {
+            background-color: #4DB6AC; /* Muted Teal */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #26A69A; /* Darker Muted Teal */
+        }
+        /* Custom styles for flowchart */
+        .flowchart-node {
+            background-color: #A1887F; /* Mid Brown */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            min-width: 150px;
+        }
+        .flowchart-arrow {
+            font-size: 2rem;
+            color: #4DB6AC; /* Muted Teal */
+            margin: 0 0.5rem;
+            line-height: 1;
+        }
+        .kpi-card {
+            background-color: #E0F2F1; /* Very Light Teal */
+            border-left: 5px solid #4DB6AC; /* Muted Teal Accent */
+        }
+        .dashboard-preview {
+            border: 2px dashed #4DB6AC;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #fafafa;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-[#A1887F] shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-2xl tajawal-bold text-[#E3C3A5]">نظام إدارة الأداء الشامل </h1>
+                </div>
+               
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+
+        <section id="home" class="my-12 text-center">
+            <h2 class="text-4xl tajawal-bold section-title mb-6 inline-block"> نظام إدارة الأداء الشامل</h2>
+            <p class="tajawal-regular text-lg mb-4 max-w-3xl mx-auto">
+                نظام لوحة مؤشرات أداء المديريات الحالي هو خطوة ممتازة نحو الشفافية والمتابعة. ومع ذلك، فإن التطور المستمر لمؤسستنا يتطلب
+ نظام أداء أكثر شمولية يربط بين التخطيط الاستراتيجي والتنفيذ التشغيلي على جميع المستويات. وفي ظل التحديات المتزايدة في متابعة الخطط وتوزيع المهام وقياس الابتكار، 
+أصبح من الضروري اعتماد نظام ذكي ومتكامل لإدارة الأداء. يهدف هذا النظام إلى تمكين الادارة من متابعة الأداء بشكل لحظي واتخاذ قرارات مبنية على بيانات
+ دقيقة ومحدثة في الوقت الفعلي. كما يسهم في تعزيز الكفاءة، رفع الإنتاجية، وتحفيز الابتكار، مما يرسّخ ثقافة التحسين المستمر داخل المؤسسة. .
+            </p>
+            <div class="grid md:grid-cols-2 gap-6 mt-8 max-w-4xl mx-auto">
+                <div class="card p-6">
+                    <h3 class="text-2xl tajawal-medium text-[#4DB6AC] mb-3">التحديات الحالية</h3>
+                    <ul class="list-disc list-inside text-right tajawal-regular space-y-1">
+                        <li>صعوبة الربط بين الخطط الاستراتيجية والأداء الفردي.</li>
+                        <li>تأخر التحديث والمتابعة في تنفيذ المهام والمشاريع </li>
+                        <li> عدم وجود مؤشرات أداء دقيقة (KPIs) </li>
+                        <li>فرص مهدرة لتوثيق وتحفيز الابتكار </li>
+                                        <li>عدم ربط الأداء بنتائج دقيقة و ملموسة </li>
+                    </ul>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-2xl tajawal-medium text-[#4DB6AC] mb-3">فرص التحسين</h3>
+                    <ul class="list-disc list-inside text-right tajawal-regular space-y-1">
+                        <li>ربط الأهداف الاستراتيجية بالخطط والمهام التشغيلية </li>
+                        <li>تمكين متخذي القرار من الوصول إلى بيانات دقيقة ومحدثة </li>
+                        <li>تعزيز الشفافية والمساءلة المؤسسية </li>
+                        <li>تحفيز الابتكار المؤسسي</li>
+                         <li>التحول نحو الحوكمة الرقمية للأداء المؤسسي</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="my-16">
+            <h2 class="text-3xl tajawal-bold section-title mb-8 text-center">ميزات النظام الأساسية</h2>
+            <p class="tajawal-regular text-lg mb-10 text-center max-w-3xl mx-auto">
+                يقدم النظام مجموعة من الميزات المصممة لتبسيط عمليات إدارة الأداء وتعزيزها، بدءًا من توزيع الخطط ووصولاً إلى تحفيز الابتكار. كل ميزة تهدف إلى توفير الوضوح، دعم التعاون، وتمكين المستخدمين على جميع المستويات.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card p-6">
+                    <div class="flex items-center justify-center mb-4">
+                        <span class="text-4xl text-[#4DB6AC]">🎯</span>
+                    </div>
+                    <h3 class="text-xl tajawal-medium text-center mb-3">الربط الشامل للخطط والأهداف</h3>
+                    <p class="tajawal-regular text-sm mb-4">
+                        يضمن النظام توزيع الخطط الاستراتيجية بسلاسة من الإدارة العليا إلى المديريات والأقسام، مع متابعة دقيقة لنسب الإنجاز.
+                        هذا يضمن أن جميع الجهود موجهة نحو تحقيق الأهداف المؤسسية الكبرى.
+                    </p>
+                    <div class="chart-container mx-auto h-64 max-h-80">
+                        <canvas id="planCompletionChart"></canvas>
+                    </div>
+                     <p class="text-xs text-center mt-2 tajawal-regular">مثال: نسبة إنجاز الخطط على مستوى المديريات.</p>
+                </div>
+
+                <div class="card p-6">
+                     <div class="flex items-center justify-center mb-4">
+                        <span class="text-4xl text-[#4DB6AC]">📊</span>
+                    </div>
+                    <h3 class="text-xl tajawal-medium text-center mb-3">إدارة المهام والمشاريع بمقاييس أداء</h3>
+                    <p class="tajawal-regular text-sm mb-4">
+                        يوفر النظام أدوات لتوزيع المهام وتتبع المشاريع مع مقاييس أداء واضحة (مثل: متأخر، قيد الإنشاء، مكتمل)، مما يسهل على المدراء والموظفين متابعة التقدم.
+                        يتم تسجيل التحديثات بشكل دوري لضمان الشفافية.
+                    </p>
+                    <div class="chart-container mx-auto h-64 max-h-80">
+                        <canvas id="taskStatusChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center mt-2 tajawal-regular">مثال: توزيع حالات المهام.</p>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center justify-center mb-4">
+                        <span class="text-4xl text-[#4DB6AC]">💡</span>
+                    </div>
+                    <h3 class="text-xl tajawal-medium text-center mb-3">تحفيز الابتكار والمبادرات</h3>
+                    <p class="tajawal-regular text-sm mb-4">
+                        منصة مدمجة لتتبع المبادرات وتقديم الأفكار الابتكارية من قبل الموظفين، مع آلية لمراجعتها وتقييمها من الإدارة العليا.
+                        يهدف هذا إلى بناء ثقافة تشجع على الإبداع والمساهمة الفعالة.
+                    </p>
+                    <div class="chart-container mx-auto h-64 max-h-80">
+                        <canvas id="innovationIdeasChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center mt-2 tajawal-regular">مثال: عدد الأفكار الابتكارية المقدمة شهريًا.</p>
+                </div>
+            </div>
+             <div class="mt-10 p-6 card">
+                <h3 class="text-xl tajawal-medium text-center mb-4">آلية عمل النظام (مثال مبسط)</h3>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 md:space-x-reverse">
+                    <div class="flowchart-node tajawal-medium">الخطة الاستراتيجية</div>
+                    <div class="flowchart-arrow">←</div>
+                    <div class="flowchart-node tajawal-medium">خطط المديريات</div>
+                    <div class="flowchart-arrow">←</div>
+                                 <div class="flowchart-node tajawal-medium">الخطط التفصيلية</div>
+                    <div class="flowchart-arrow">←</div>
+                    <div class="flowchart-node tajawal-medium">مهام الموظفين</div>
+                    <div class="flowchart-arrow">←</div>
+                    <div class="flowchart-node tajawal-medium">تقييم الأداء</div>
+                </div>
+                <p class="text-sm text-center mt-4 tajawal-regular">
+                    يوضح هذا المخطط التدفق العام للخطط والمهام داخل النظام، حيث تبدأ العملية بالخطة الاستراتيجية للمؤسسة، ثم يتم توزيعها إلى خطط تفصيلية للمديريات، والتي بدورها تُترجم إلى مهام ومشاريع للموظفين. يتم بعد ذلك تقييم الأداء بناءً على إنجاز هذه المهام والمساهمة في تحقيق الأهداف.
+                </p>
+            </div>
+        </section>
+
+        <section id="dashboards" class="my-16">
+            <h2 class="text-3xl tajawal-bold section-title mb-8 text-center">نظرة على لوحات التحكم (تصورية)</h2>
+            <p class="tajawal-regular text-lg mb-10 text-center max-w-3xl mx-auto">
+                يوفر النظام واجهات مخصصة لكل مستوى وظيفي، مما يضمن حصول كل مستخدم على المعلومات التي يحتاجها لاتخاذ القرارات وتحسين الأداء. هذه مجرد أمثلة تصورية لما قد تبدو عليه هذه اللوحات.
+            </p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="dashboard-preview">
+                    <h3 class="text-xl tajawal-medium text-[#3E2723] mb-4">شاشة الموظف</h3>
+                    <p class="tajawal-regular text-sm mb-3">يركز الموظف على مهامه ومشاريعه الشخصية، مبادراته، وابتكاراته مع مقياس أداء إجمالي.</p>
+                    <ul class="list-disc list-inside text-sm space-y-1 tajawal-regular">
+                        <li>قائمة المهام اليومية والأسبوعية.</li>
+                        <li>تقدم المشاريع المسندة إليه.</li>
+                        <li>المبادرات المشارك بها.</li>
+                        <li>الأفكار الابتكارية المقدمة.</li>
+                        <li>مؤشر الأداء العام: <span class="tajawal-bold text-[#4DB6AC]">85%</span></li>
+                    </ul>
+                    <div class="chart-container mx-auto h-48 max-h-60 mt-4">
+                        <canvas id="employeePerformanceChart"></canvas>
+                    </div>
+                  
+
+
+  <style>
+    .custom-btn {
+      background-color: #2f5d62;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .custom-btn:hover {
+      background-color: #1e3e41;
+      transform: scale(1.05);
+    }
+  </style>
+
+
+<body>
+  <p class="text-xs text-center mt-1 tajawal-regular">
+    مثال:
+    <a href="d.html" target="_blank" class="custom-btn">صفحات الموظف</a>
+  </p>
+</body>
+
+
+                </div>
+                <div class="dashboard-preview">
+                    <h3 class="text-xl tajawal-medium text-[#3E2723] mb-4">شاشة المسؤول المباشر</h3>
+                    <p class="tajawal-regular text-sm mb-3">يطلع المسؤول على أداء فريقه، ويتتبع المهام المتأخرة.</p>
+                     <ul class="list-disc list-inside text-sm space-y-1 tajawal-regular">
+                        <li>مجموع نسب إنجاز كل موظف</li>
+                        <li>المهام والمشاريع ومتابعة سير العمل</li>
+                        <li>ابتكارات الموظفين.</li>
+                        <li>أفضل موظف منجز</li>
+                        <li>متوسط أداء الفريق: <span class="tajawal-bold text-[#4DB6AC]">78%</span></li>
+                    </ul>
+                    <div class="chart-container mx-auto h-48 max-h-60 mt-4">
+                        <canvas id="teamPerformanceChart"></canvas>
+                    </div>
+<style>
+    .custom-btn {
+      background-color: #2f5d62;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .custom-btn:hover {
+      background-color: #1e3e41;
+      transform: scale(1.05);
+    }
+  </style>
+
+
+<body>
+                     <p class="text-xs text-center mt-1 tajawal-regular">
+  مثال: <a href="s.html" target="_blank" class="custom-btn">صفحات المسؤال</a>.
+</p>
+                </div>
+                <div class="dashboard-preview">
+                    <h3 class="text-xl tajawal-medium text-[#3E2723] mb-4">شاشة الإدارة العليا</h3>
+                    <p class="tajawal-regular text-sm mb-3">توفر رؤية استراتيجية لأداء المؤسسة ككل، أداء المديريات، مع إمكانية التعمق في التفاصيل.</p>
+                    <ul class="list-disc list-inside text-sm space-y-1 tajawal-regular">
+                        <li>نسب إنجاز الخطط الاستراتيجية.</li>
+                        <li>يطلع على أعمال الموظفين وأداء المديريات</li>
+                        <li>مؤشرات الابتكار على مستوى المؤسسة.</li>
+                        <li> أفضل المديريات أداءً.</li>
+                        <li>الأداء المؤسسي العام: <span class="tajawal-bold text-[#4DB6AC]">82%</span></li>
+                    </ul>
+                    <div class="chart-container mx-auto h-48 max-h-60 mt-4">
+                        <canvas id="directoratePerformanceChart"></canvas>
+                    </div>
+<style>
+    .custom-btn {
+      background-color: #2f5d62;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .custom-btn:hover {
+      background-color: #1e3e41;
+      transform: scale(1.05);
+    }
+  </style>
+
+
+<body>
+                     <p class="text-xs text-center mt-1 tajawal-regular">
+  مثال: <a href="man.html" target="_blank" class="custom-btn">صفحات الادارة العليا</a>.
+</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="my-16">
+            <h2 class="text-3xl tajawal-bold section-title mb-8 text-center">الأثر المتوقع </h2>
+            <p class="tajawal-regular text-lg mb-10 text-center max-w-3xl mx-auto">
+                يهدف تطبيق هذا النظام إلى تحقيق نتائج ملموسة تتجاوز حدود تتبع الأداء، لتشمل تحسينات جوهرية في كيفية عمل المؤسسة وتحقيقها لأهدافها. الاستثمار في هذا النظام هو استثمار في مستقبل أكثر كفاءة وابتكارًا.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="kpi-card p-6 rounded-lg">
+                    <h3 class="text-xl tajawal-medium mb-3">تحسين مؤشرات الأداء الرئيسية (KPIs)</h3>
+                    <p class="tajawal-regular text-sm mb-4">نتوقع تحسنًا ملحوظًا في المؤشرات التالية:</p>
+                    <ul class="list-inside space-y-2 tajawal-regular">
+                        <li class="flex items-center"><span class="text-green-500 text-xl mr-2 ml-2">▲</span> زيادة نسبة إنجاز الخطط السنوية.</li>
+                        <li class="flex items-center"><span class="text-green-500 text-xl mr-2 ml-2">▲</span> ارتفاع عدد الأفكار الابتكارية المعتمدة.</li>
+                        <li class="flex items-center"><span class="text-green-500 text-xl mr-2 ml-2">▲</span> تحسين كفاءة إنجاز المهام والمشاريع.</li>
+                        <li class="flex items-center"><span class="text-green-500 text-xl mr-2 ml-2">▲</span> زيادة رضا الموظفين وتحفيزهم.</li>
+                       <li class="flex items-center"><span class="text-green-500 text-xl mr-2 ml-2">▲</span> الحد من التدخل البشري.</li>
+                    </ul>
+                </div>
+                <div class="chart-container">
+                    <canvas id="kpiImprovementChart"></canvas>
+                     <p class="text-xs text-center mt-2 tajawal-regular">مثال: التحسن المتوقع في إنجاز الخطط وكفاءة المهام.</p>
+                </div>
+            </div>
+             <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card p-4 text-center">
+                    <div class="text-3xl text-[#4DB6AC] mb-2">📈</div>
+                    <h4 class="tajawal-medium">تعزيز الكفاءة</h4>
+                    <p class="text-xs tajawal-regular">زيادة نسبة إنجاز الخطط السنوية</p>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-3xl text-[#4DB6AC] mb-2">🎯</div>
+                    <h4 class="tajawal-medium">تحسين القرارات</h4>
+                    <p class="text-xs tajawal-regular">بيانات دقيقة لدعم القرارات الاستراتيجية.</p>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-3xl text-[#4DB6AC] mb-2">🤝</div>
+                    <h4 class="tajawal-medium">زيادة الشفافية</h4>
+                    <p class="text-xs tajawal-regular">رؤية واضحة لأداء الأفراد والمديريات.</p>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-3xl text-[#4DB6AC] mb-2">💡</div>
+                    <h4 class="tajawal-medium">تحفيز الابتكار</h4>
+                    <p class="text-xs tajawal-regular">بيئة مشجعة على الإبداع وتقديم الأفكار.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="next-steps" class="my-16 text-center">
+            <h2 class="text-3xl tajawal-bold section-title mb-6 inline-block"> معًا نحو التميز</h2>
+            <p class="tajawal-regular text-lg mb-8 max-w-3xl mx-auto"> النظام يمثل خطوة استراتيجية نحو تحقيق التميز المؤسسي وتعزيز الأداء على كافة المستويات. ونأمل الحصول
+ على الموافقة المبدئية للمضي قدمًا في اتخاذ الخطوات العملية اللازمة لتحويل
+ هذه الفكرة إلى واقع فعّال يدعم أهداف المؤسسة ويعزز استدامة نتائجها </p>
+            <div class="max-w-xl mx-auto card p-8">
+                <h3 class="text-xl tajawal-medium mb-4">نوصي بـ:</h3>
+                <ul class="list-disc list-inside text-right tajawal-regular space-y-2 mb-8">
+                    <li>الموافقة المبدئية على فكرة النظام باعتبارها خطوة استراتيجية نحو تطوير وتحسين الأداء المؤسسي.</li>
+                    <li>تشكيل فريق عمل <strong>مختص</strong> يتولى دراسة الجدوى التفصيلية وإعداد خطة تنفيذية شاملة </li>
+
+                    <li>وضع آلية متابعة وتقييم واضحة لقياس مدى تحقق الأهداف ومعالجة التحديات أثناء مراحل التنفيذ وضمان التحسين المستمر.</li>
+                </ul>
+                
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#A1887F] text-white text-center p-6 mt-12">
+        <p class="tajawal-regular">&copy; 2025 جميع الحقوق محفوظة لدائرة تقنية المعلومات(قسم تطوير الأنظمة الداخلية).</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for navigation links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70, // Adjust for sticky header
+                            behavior: 'smooth'
+                        });
+                    }
+                    // Active link styling
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Chart.js configurations
+            const defaultChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: { family: 'Tajawal' }
+                        }
+                    },
+                    tooltip: {
+                        titleFont: { family: 'Tajawal' },
+                        bodyFont: { family: 'Tajawal' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { font: { family: 'Tajawal' } }
+                    },
+                    x: {
+                        ticks: { font: { family: 'Tajawal' } }
+                    }
+                }
+            };
+            
+            // Mock Data and Chart Initializations
+            // 1. Plan Completion Chart
+            const planCtx = document.getElementById('planCompletionChart')?.getContext('2d');
+            if (planCtx) {
+                new Chart(planCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['المديرية أ', 'المديرية ب', 'المديرية ج', 'المديرية د'],
+                        datasets: [{
+                            label: 'نسبة إنجاز الخطط (%)',
+                            data: [75, 88, 60, 92],
+                            backgroundColor: '#4DB6AC',
+                            borderColor: '#26A69A',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: defaultChartOptions
+                });
+            }
+
+            // 2. Task Status Chart
+            const taskCtx = document.getElementById('taskStatusChart')?.getContext('2d');
+            if (taskCtx) {
+                new Chart(taskCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['مكتملة', 'قيد الإنشاء', 'متأخرة'],
+                        datasets: [{
+                            label: 'حالة المهام',
+                            data: [120, 50, 15],
+                            backgroundColor: ['#4CAF50', '#FFC107', '#F44336'],
+                        }]
+                    },
+                    options: {...defaultChartOptions, cutout: '70%'}
+                });
+            }
+
+            // 3. Innovation Ideas Chart
+            const innovationCtx = document.getElementById('innovationIdeasChart')?.getContext('2d');
+            if (innovationCtx) {
+                 new Chart(innovationCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو'],
+                        datasets: [{
+                            label: 'الأفكار الابتكارية المقدمة',
+                            data: [5, 8, 12, 9, 15],
+                            borderColor: '#4DB6AC',
+                            backgroundColor: 'rgba(77, 182, 172, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: defaultChartOptions
+                });
+            }
+
+            // 4. Employee Performance Chart (Example)
+            const empPerfCtx = document.getElementById('employeePerformanceChart')?.getContext('2d');
+            if (empPerfCtx) {
+                new Chart(empPerfCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['مهام رئيسية', 'مشاريع تطويرية', 'مبادرات', 'تدريب'],
+                        datasets: [{
+                            data: [60, 25, 10, 5], // Percentage allocation
+                            backgroundColor: ['#4DB6AC', '#80CBC4', '#A1887F', '#BCAAA4'],
+                        }]
+                    },
+                    options: {...defaultChartOptions, plugins: {...defaultChartOptions.plugins, legend: {position: 'bottom'}}}
+                });
+            }
+            
+            // 5. Team Performance Chart (Example)
+            const teamPerfCtx = document.getElementById('teamPerformanceChart')?.getContext('2d');
+            if (teamPerfCtx) {
+                new Chart(teamPerfCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['موظف 1', 'موظف 2', 'موظف 3', 'موظف 4'],
+                        datasets: [{
+                            label: 'مستوى الإنجاز (%)',
+                            data: [90, 75, 82, 88],
+                            backgroundColor: '#80CBC4',
+                        }]
+                    },
+                    options: defaultChartOptions
+                });
+            }
+
+            // 6. Directorate Performance Chart (Example)
+            const dirPerfCtx = document.getElementById('directoratePerformanceChart')?.getContext('2d');
+            if (dirPerfCtx) {
+                 new Chart(dirPerfCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['إنجاز الخطط', 'كفاءة المهام', 'الابتكار', 'رضا الموظفين', 'الالتزام بالمواعيد'],
+                        datasets: [
+                        {
+                            label: 'المديرية أ',
+                            data: [8, 7, 9, 6, 8],
+                            borderColor: '#4DB6AC',
+                            backgroundColor: 'rgba(77, 182, 172, 0.2)',
+                        },
+                        {
+                            label: 'المديرية ب',
+                            data: [6, 8, 7, 9, 7],
+                            borderColor: '#A1887F',
+                            backgroundColor: 'rgba(161, 136, 127, 0.2)',
+                        }
+                        ]
+                    },
+                    options: {...defaultChartOptions, scales: { r: { beginAtZero: true, suggestedMax: 10, pointLabels: { font: { family: 'Tajawal' }}} }}
+                });
+            }
+
+            // 7. KPI Improvement Chart
+            const kpiCtx = document.getElementById('kpiImprovementChart')?.getContext('2d');
+            if (kpiCtx) {
+                new Chart(kpiCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['إنجاز الخطط (%)', 'كفاءة المهام (%)', 'عدد الابتكارات'],
+                        datasets: [
+                            {
+                                label: 'قبل النظام',
+                                data: [70, 65, 20],
+                                backgroundColor: '#BCAAA4', // Light Brown
+                            },
+                            {
+                                label: 'بعد النظام (متوقع)',
+                                data: [90, 85, 50],
+                                backgroundColor: '#4DB6AC', // Muted Teal
+                            }
+                        ]
+                    },
+                    options: defaultChartOptions
+                });
+            }
+        });
+    </script>
+</body>
+</html>

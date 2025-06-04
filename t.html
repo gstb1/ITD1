@@ -1,0 +1,423 @@
+
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif; /* يمكنك تغيير الخط إلى Cairo أو أي خط عربي آخر */
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6; /* لون خلفية فاتح */
+            color: #333;
+            direction: rtl; /* لاتجاه اللغة العربية */
+            text-align: right; /* لمحاذاة النص لليمين */
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #2c3e50;
+        }
+
+        .header-center {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center; /* Center search bar */
+        }
+
+        .search-bar {
+            position: relative;
+            width: 60%;
+            max-width: 400px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            padding-left: 40px; /* Space for icon */
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+            text-align: right; /* Input text direction */
+        }
+
+        .search-bar .search-icon {
+            position: absolute;
+            left: 15px; /* Icon on the left for RTL */
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-icon {
+            font-size: 1.5em;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #ccc;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #ddd;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .dashboard-content {
+            flex-grow: 1;
+        }
+
+        /* KPI Cards */
+        .kpi-cards {
+            display: flex;
+            justify-content: space-between;
+            gap: 25px;
+            margin-bottom: 40px;
+            flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            flex: 1; /* Allow cards to take equal space */
+            min-width: 280px; /* Minimum width for cards */
+            text-align: right; /* Text align right inside cards */
+        }
+
+        .card-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: left; /* Icon on the left */
+        }
+
+        .card-details {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .card-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .card-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            align-self: flex-start; /* Align button to the start (right for RTL) */
+            transition: background 0.3s ease;
+        }
+
+        .card-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Card Gradients */
+        .blue-gradient {
+            background: linear-gradient(135deg, #DCCD5C);
+        }
+
+        .green-gradient {
+            background: linear-gradient(135deg, #87B09A);
+        }
+
+        .orange-gradient {
+            background: linear-gradient(135deg,#D26E66);
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: #fff;
+            color: #4a90e2;
+            border: 1px solid #4a90e2;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background-color: #4a90e2;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-btn:not(.active):hover {
+            background-color: #e6f0fa; /* Light blue on hover */
+        }
+
+        /* Task List */
+        .task-list {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .task-list-title {
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .tasks-table-container {
+            max-height: 400px; /* Max height for scrollable area */
+            overflow-y: auto; /* Enable vertical scrollbar */
+        }
+
+        .tasks-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right; /* Ensure table content aligns right */
+        }
+
+        .tasks-table th,
+        .tasks-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tasks-table th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            color: #555;
+            text-align: right;
+        }
+
+        .tasks-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 8px; /* Space from text */
+            vertical-align: middle;
+        }
+
+        .status-indicator.new {
+            background-color: #a0a0a0; /* Grey for new tasks */
+        }
+
+        .action-btn {
+            background-color: #4CAF50; /* Green for start button */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Basic Responsiveness (Optional - Add more media queries for full responsiveness) */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-end; /* Align header elements to the right */
+            }
+            .header-center {
+                width: 100%;
+                margin-top: 20px;
+                order: 3; /* Move search below title and icons */
+            }
+            .header-right {
+                align-self: flex-start; /* Move icons to the left */
+                order: 2;
+            }
+            .header-left {
+                width: 100%;
+                order: 1;
+                text-align: right;
+            }
+            .search-bar {
+                width: 100%;
+            }
+            .kpi-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            .card {
+                width: 90%;
+                max-width: 400px;
+            }
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-right">
+                <span class="notification-icon">&#128276;</span> <div class="profile-avatar"> </div>
+<p> مرحبا أحلام النظيريية</p>
+            </div>
+            <div class="header-center">
+                <div class="search-bar">
+                    <input type="text" placeholder="البحث...">
+                    <span class="search-icon">&#128269;</span> </div>
+            </div>
+            <div class="header-left">
+                <h2>لوحة المهام </h2>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="kpi-cards">
+                <div class="card blue-gradient">
+                    <div class="card-icon">&#9881;</div> <div class="card-details">
+                        <span class="card-number">120</span>
+                        <span class="card-title">مهام قيد التنفيذ</span>
+                    </div>
+                    <button class="card-button">التفاصيل</button>
+                </div>
+
+                <div class="card green-gradient">
+                    <div class="card-icon">&#10003;</div> <div class="card-details">
+                        <span class="card-number">350</span>
+                        <span class="card-title">مهام مكتملة</span>
+                    </div>
+                    <button class="card-button">التفاصيل</button>
+                </div>
+
+                <div class="card orange-gradient">
+                    <div class="card-icon">&#33;</div> <div class="card-details">
+                        <span class="card-number">15</span>
+                        <span class="card-title">مهام متعثرة</span>
+                    </div>
+                    <button class="card-button">التفاصيل</button>
+                </div>
+            </section>
+
+            <section class="filter-buttons">
+                <button class="filter-btn active">مهام جديدة</button>
+                <button class="filter-btn">مهام قيد التنفيذ</button>
+                <button class="filter-btn">مهام متعثرة</button>
+            </section>
+
+            <section class="task-list">
+                <h3 class="task-list-title">المهام الجديدة </h3>
+                <div class="tasks-table-container">
+                    <table class="tasks-table">
+                        <thead>
+                            <tr>
+                                <th>المهمة</th>
+                         
+                                <th>تاريخ البدء</th>
+                                <th>الحالة</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>إعداد تقرير دمج الموقع الخارجي مع اسناد</td>
+                                
+                                <td>2025-05-20</td>
+                                <td><span class="status-indicator new"></span> جديدة</td>
+                                <td><button class="action-btn">بدء</button></td>
+                            </tr>
+                            <tr>
+                                <td>مراجعة خطة لوحة المؤشرات</td>
+                               
+                                <td>2025-05-22</td>
+                                <td><span class="status-indicator new"></span> جديدة</td>
+                                <td><button class="action-btn">بدء</button></td>
+                            </tr>
+                            <tr>
+                                <td>تحديث صفحات الموقع الداخلي </td>
+                                
+                                <td>2025-05-23</td>
+                                <td><span class="status-indicator new"></span> جديدة</td>
+                                <td><button class="action-btn">بدء</button></td>
+                            </tr>
+                            <tr>
+                                <td>إنشاء صفحات ويب للمحتوى المحلي </td>
+                               
+                                <td>2025-05-24</td>
+                                <td><span class="status-indicator new"></span> جديدة</td>
+                                <td><button class="action-btn">بدء</button></td>
+                            </tr> 
+                            <tr>
+                                <td>تقرير اسبوعي لمشروع الموقع الخارجي والداخلي</td>
+                                
+                                <td>2025-05-25</td>
+                                <td><span class="status-indicator new"></span> جديدة</td>
+                                <td><button class="action-btn">بدء</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

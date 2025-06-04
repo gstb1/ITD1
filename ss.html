@@ -1,0 +1,467 @@
+
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صفحة الموظف</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      background-color: #f4f7f6;
+      display: flex;
+      height: 150vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #2f5d62;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    .sidebar .company-logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar .company-logo h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #e3f2fd;
+    }
+
+    .sidebar .user-profile {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .sidebar .user-profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid #e3f2fd;
+      margin-bottom: 10px;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      flex-grow: 1;
+    }
+
+    .sidebar nav ul li {
+      margin-bottom: 10px;
+    }
+
+    .sidebar nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar nav ul li.active a {
+      background-color: #1565c0;
+    }
+
+    .sidebar nav ul li a i {
+      margin-left: 10px;
+      font-size: 20px;
+    }
+
+    .sidebar .logout-button {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .sidebar .logout-button a {
+      background-color: #e57373;
+      color: white;
+      text-decoration: none;
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar .logout-button a:hover {
+      background-color: #ef5350;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 30px;
+      background-color: #f4f7f6;
+    }
+
+    .header {
+      background-color: #87B09A;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .employee-selector {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .dashboard {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .chart, .ranking {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+
+    .bar {
+      height: 14px;
+      background: #ddd;
+      border-radius: 6px;
+      margin: 5px 0;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      background: #87B09A;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: 300px !important;
+    }
+
+    /* نافذة منبثقة */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      right: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 60%;
+      direction: rtl;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .close {
+      color: #aaa;
+      float: left;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: black;
+    }
+
+    .modal table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .modal table, .modal th, .modal td {
+      border: 1px solid #ccc;
+    }
+
+    .modal th, .modal td {
+      padding: 12px;
+      text-align: center;
+      font-size: 16px;
+    }
+ 
+.cards-horizontal {
+    display: flex;
+    flex-wrap: nowrap; /* يمنع التفاف البطاقات */
+    gap: 20px;
+    overflow-x: auto; /* يسمح بالتمرير الأفقي */
+    padding: 10px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    min-width: 200px;
+    flex: 0 0 auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card h3 {
+    font-size: 18px;
+    color: #2f5d62;
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    color: #1565c0;
+  }
+
+  .card-task {
+    border-top: 5px solid #4CAF50;
+  }
+
+  .card-initiative {
+    border-top: 5px solid #FF9800;
+  }
+
+  .card-project {
+    border-top: 5px solid #03A9F4;
+  }
+
+  .card-innovation {
+    border-top: 5px solid #9C27B0;
+  }
+ 
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="company-logo">
+      <img src="logo.png" alt="Logo" style="width: 200px; margin-bottom: 10px;">
+      <h3>اسم المسؤال</h3>
+      <p>abc@example.com</p>
+    </div>
+
+    <h2 style="font-size: 18px; color: #e3f2fd; text-align: center; margin-bottom: 20px;">صفحة المسؤال</h2>
+
+    <nav>
+      <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i>الرئيسية</a></li>
+        <li><a href="tt.html"><i class="fas fa-tasks"></i>المهام</a></li>
+        <li><a href=""><i class="fas fa-lightbulb"></i>المشاريع</a></li>
+        <li><a href="#"><i class="fas fa-project-diagram"></i>المبادرات</a></li>
+        <li><a href="#"><i class="fas fa-chalkboard-teacher"></i>ورش تدريبية</a></li>
+      </ul>
+    </nav>
+
+    <div class="logout-button">
+      <a href="index.html"><i class="fas fa-sign-out-alt"></i>خروج</a>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>مرحباً (اسم المسؤال المباشر)!</h1>
+    </div>
+
+    <div class="employee-selector">
+      <div>
+        <label for="employeeDropdown">اختر الموظف:</label>
+        <select id="employeeDropdown" onchange="updateEmployeeData()">
+          <option value="galia">غالية التميمي</option>
+          <option value="fatima">فاطمة البلوشي</option>
+          <option value="omar">حمد البلوشي</option>
+          <option value="ahlam">أحلام النظيري</option>
+        </select>
+      </div>
+      <div>
+        <strong>أفضل أداء:</strong>
+        <span id="topPerformance">غالية التميمي</span>
+      </div>
+    </div>
+ 
+<div class="cards-horizontal">
+  <div class="card card-task">
+    <h3>نسبة إنجاز المهام</h3>
+    <p>87%</p>
+  </div>
+  <div class="card card-initiative">
+    <h3>عدد المبادرات</h3>
+    <p>5</p>
+  </div>
+  <div class="card card-project">
+    <h3>عدد المشاريع</h3>
+    <p>2</p>
+  </div>
+  <div class="card card-innovation">
+    <h3>عدد الابتكارات</h3>
+    <p>1</p>
+  </div>
+</div>
+
+    <div class="dashboard">
+      <div class="ranking">
+        <h3>ترتيب المديريات حسب الإنجاز</h3>
+        <div>1. المديرية العامة للاحصاء والنظم الالكترونية <div class="bar"><div class="bar-fill" style="width:95%"></div></div></div>
+        <div>2. المديرية العامة للمشتريات الحكومية <div class="bar"><div class="bar-fill" style="width:90%"></div></div></div>
+        <div>3. المديرية العامة للشؤون الادارية والمالية <div class="bar"><div class="bar-fill" style="width:85%"></div></div></div>
+        <div>4. المديرية العامة للمحتوى المحلي <div class="bar"><div class="bar-fill" style="width:80%"></div></div></div>
+        <div>5. مكتب الامين العام <div class="bar"><div class="bar-fill" style="width:75%"></div></div></div>
+        <div>6. مكتب متابعة المشاريع <div class="bar"><div class="bar-fill" style="width:70%"></div></div></div>
+        <div>7. المديرية العامة للمناقصات <div class="bar"><div class="bar-fill" style="width:65%"></div></div></div>
+      </div>
+
+      <div class="chart">
+        <h3>نسب الابتكار حسب المديريات</h3>
+        <canvas id="innovationChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart" style="margin-top: 20px;">
+      <h3>عدد المبادرات والمشاريع حسب المديرية</h3>
+      <canvas id="initiativeChart"></canvas>
+    </div>
+  </div>
+
+  <!-- نافذة منبثقة -->
+  <div id="employeeModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+     <h2 id="modalTitle">تفاصيل أداء الموظف - <span id="overallPerformance" style="font-size: 18px; color: #2f5d62;"></span></h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>المؤشر</th>
+            <th>القيمة</th>
+          </tr>
+        </thead>
+        <tbody id="employeeTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const employeeData = {
+      galia: {
+        name: "غالية التميمي",
+        tasks: "89%",
+        initiatives: 5,
+        projects: 2,
+        innovations: 1
+      },
+      fatima: {
+        name: "فاطمة البلوشي",
+        tasks: "88%",
+        initiatives: 7,
+        projects: 3,
+        innovations: 3
+      },
+      ahlam: {
+        name: "احلام النظيري",
+        tasks: "88%",
+        initiatives: 7,
+        projects: 3,
+        innovations: 3
+      },
+      omar: {
+        name: "حمد البلوشي",
+        tasks: "88%",
+        initiatives: 3,
+        projects: 1,
+        innovations: 0
+      }
+    };
+
+    function updateEmployeeData() {
+      const selected = document.getElementById('employeeDropdown').value;
+      const data = employeeData[selected];
+      const tableBody = document.getElementById('employeeTableBody');
+      tableBody.innerHTML = `
+  <tr><td>نسبة إنجاز المهام</td><td><a href="tasks.html" class="link-button">${data.tasks}</td></tr>
+  <tr><td>عدد المبادرات</td><td><a href="tasks.html" class="link-button">${data.initiatives}</td></tr>
+  <tr><td>عدد المشاريع</td><td><a href="tasks.html" class="link-button">${data.projects}</td></tr>
+  <tr><td>عدد الابتكارات</td><td><a href="tasks.html" class="link-button">${data.innovations}</td></tr>
+`;
+
+document.getElementById('modalTitle').innerHTML = `تفاصيل أداء الموظف - <span id="overallPerformance" style="font-size: 18px; color: #2f5d62;">${data.tasks}</span>`;
+
+      document.getElementById('employeeModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('employeeModal').style.display = 'none';
+    }
+
+    const ctx = document.getElementById('innovationChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['المشتريات الحكومية', 'المحتوى المحلي', 'المناقصات', 'الإحصاء والنظم الالكترونية', 'مكتب الامين العام'],
+        datasets: [{
+          label: 'نسب الابتكار',
+          data: [30, 25, 20, 15, 10],
+          backgroundColor: ['#83C7AA', '#DCB38D', '#ffcccb', '#a0c4ff', '#d3f8e2']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    const ctx2 = document.getElementById('initiativeChart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['المشتريات الحكومية', 'المحتوى المحلي', 'المناقصات', 'الإحصاء والنظم الالكترونية', 'مكتب الامين العام'],
+        datasets: [
+          {
+            label: 'المبادرات',
+            data: [5, 4, 3, 2],
+            backgroundColor: '#DCB38D'
+          },
+          {
+            label: 'المشاريع',
+            data: [3, 3, 2, 1],
+            backgroundColor: '#83C7AA'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  </script>
+</body>
+</html>
